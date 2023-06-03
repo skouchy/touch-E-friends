@@ -1,33 +1,23 @@
-import Navbar from "./components/Navbar"
-import Search from "./pages/SearchImages"
-import Images from "./components/Images"
-import useAxios from "./hooks/axios"
-import { createContext, useState } from "react"
-
-export const ImageContext=createContext();
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Home from './pages/Home'
+import AddressBook from './pages/AddressBook'
+import Login from './pages/Login'
+import SignUp from './pages/SignUp'
+import ImageSearch from './pages/ImageSearch';
 
 function App() {
-  const [searchImage, setSearchImage]=useState('');
-  const{response,isLoading, error,fetchData}= useAxios(`search/photos?page=1&query=office&client_id=${process.env.REACT_APP_ACCESS_KEY}`);
-  console.log(response);
-
-  const value = {
-    response,
-    isLoading,
-    error,
-    fetchData,
-    searchImage,
-    setSearchImage
-  }
-
   return (
     <div className="App">
-      <ImageContext.Provider value={value}>
-        <Navbar>
-          <Search></Search>
-        </Navbar>
-        <Images />
-      </ImageContext.Provider>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Home/>}/>
+          <Route path='/home' element={<Home/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/signup' element={<SignUp/>}/>
+          <Route path='/address' element={<AddressBook/>}/>
+          <Route path='/imagesearch' element={<ImageSearch/>}/>
+        </Routes> 
+      </BrowserRouter>
     </div>
   );
 }

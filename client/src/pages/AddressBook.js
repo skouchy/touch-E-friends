@@ -1,3 +1,22 @@
+import React from 'react';
+
+import Navbar from '../components/Navbar'
+
+
+function AddressBook() {
+  return (
+    <>
+      <Navbar />
+      <h1>Address Book Page</h1>
+      
+    </>
+  );
+}
+
+export default AddressBook;
+
+
+
 // TODO: Update for Address Book 
 
 // import React from 'react';
