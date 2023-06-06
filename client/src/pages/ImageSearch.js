@@ -1,41 +1,48 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
-import Banner from "./tools/Banner"
-import Search from "./tools/Search"
-import {createContext, useState} from "react"
-import useAxios from "./tools/Axios"
-import Images from './tools/Images';
-
-export const ImageContext=createContext();
+import axios from "axios"
+import './ImageSearch.css'
 
 
 function ImageSearch() {
-  const [searchImage, setSearchImage]=useState('');
-  const{response,isLoading, error,fetchData}= useAxios(`search/photos?page=1&query=office&client_id=${process.env.REACT_APP_ACCESS_KEY}`);
-  console.log(response);
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
 
-  const value = {
-    response,
-    isLoading,
-    error,
-    fetchData,
-    searchImage,
-    setSearchImage
-  }
+  const searchImages = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.unsplash.com/search/photos?query=${query}&client_id=${process.env.REACT_APP_ACCESS_KEY}`
+      );
+      setImages(response.data.results);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <>
-      <ImageContext.Provider value={value}>
-        <Navbar />
-        <Banner>
-          <Search></Search>
-        </Banner>
-        <Images/>
+    <><Navbar />
+      <div className='findimg-ctn'>
+        <h1 className='title'>Search for Image!</h1>
+        <input
+          type="text"
+          placeholder="Search images..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)} />
+        <button className='srchbtn' onClick={searchImages}>Search</button>
+        <div className='grid-container'>
+          {images.map((image) => (
+            <div className="grid-item" key={image.id}>
+              <img src={image.urls.small} alt={image.alt_description} />
+            </div>
+          ))}
+
+        </div>
         <Footer />
-      </ImageContext.Provider>   
+      </div>
     </>
   );
 }
+
 
 export default ImageSearch;
