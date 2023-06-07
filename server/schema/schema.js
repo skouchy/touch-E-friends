@@ -69,15 +69,40 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
-        Project.find({ friendId: args.id }).then((projects) => {
-          projects.forEach((project) => {
-            project.deleteOne();
+        Friend.find({ friendId: args.id }).then((friends) => {
+          friends.forEach((friend) => {
+            friend.deleteOne();
           });
         });
 
         return Friend.findByIdAndRemove(args.id);
       },
     },
+
+     // Update a friend
+     updateFriend: {
+      type: FriendType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        phone: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Friend.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              name: args.name,
+              email: args.email,
+              phone: args.phone,
+            },
+          },
+          { new: true }
+        );
+      },
+    },
+
   },
 });
 

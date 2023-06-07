@@ -1,24 +1,43 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Home from './pages/Home'
-import AddressBook from './pages/AddressBook'
-import Login from './pages/Login'
-import SignUp from './pages/SignUp'
-import ImageSearch from './pages/ImageSearch';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        friends: {
+          merge(existing, incoming) {
+            return incoming;
+          },
+        },
+      },
+    },
+  },
+});
+
+const client = new ApolloClient({
+  uri: 'http://localhost:5000/graphql',
+  cache,
+});
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Home/>}/>
-          <Route path='/home' element={<Home/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/signup' element={<SignUp/>}/>
-          <Route path='/address' element={<AddressBook/>}/>
-          <Route path='/imagesearch' element={<ImageSearch/>}/>
-        </Routes> 
-      </BrowserRouter>
-    </div>
+    <>
+      <ApolloProvider client={client}>
+        <Router>
+          <Header />
+          <div className='container'>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='*' element={<NotFound />} />
+            </Routes>
+          </div>
+        </Router>
+      </ApolloProvider>
+    </>
   );
 }
 
