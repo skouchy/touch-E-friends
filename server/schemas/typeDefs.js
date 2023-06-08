@@ -25,26 +25,29 @@ const typeDefs = gql`
     }
 
     input FriendInput {
-        friendId: ID!
-        name: String
+        _id: ID!
+        name: String!
+        phone: String
+        email: String
+        address: String
     }
 
     type Query { # just like a fetch{GET)
         me: User
-        users: [User]
-        user(username: String!): User
-        # friends is the query, String is the type
-        friends(name: String): [Friend] # creating custom dataType (each friend that returns will include ALL Friend fields
-        # & also instructs the query that we'll return an array
-        friend(_id: ID!): Friend  
+        # users: [User]
+        # user(username: String!): User
+        # # friends is the query, String is the type
+        # friends(name: String): [Friend] # creating custom dataType (each friend that returns will include ALL Friend fields
+        # # & also instructs the query that we'll return an array
+        # friend(_id: ID!): Friend  
     }
 
     type Mutation {
         login(email: String!, password: String!): Auth
-        addUser(username: String!, email: String!, password: String!): Auth
-        addFriend(friendData: String!): Friend
+        addUser(email: String!, password: String!, username: String!): Auth
+        addFriend(friendData: FriendInput!): User
+        removeFriend(_id: ID!): User
         # editFriend
-        # removeFriend
     }
 `;
 

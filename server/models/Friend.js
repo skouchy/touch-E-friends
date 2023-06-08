@@ -9,10 +9,11 @@ const friendSchema = new Schema({
   },
   email: {
     type: String,
+    match: [/.+@.+\..+/, 'Must use a valid email address']
   },
   phone: {
     type: String,
-    match: /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/
+    match: [/^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/, 'Please input a valid phone number']
   },
   address: {
     type: String
