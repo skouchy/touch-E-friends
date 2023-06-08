@@ -1,42 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
+import {ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
+import { GET_CONTACTS } from '../utils/queries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import './AddressBook.css'; // Import the CSS file
+import './AddressBook.css';
 
 function AddressBook() {
   const [contacts, setContacts] = useState([]);
-
-  const handleUpdate = (id) => {
-    // Logic to update the contact with the given id
-    console.log(`Update contact with id ${id}`);
-  };
-
-  const handleDelete = (id) => {
-    // Logic to delete the contact with the given id
-    console.log(`Delete contact with id ${id}`);
-  };
-
-  const handleNewContact = () => {
-    // Logic to generate a new contact card
-    const newContact = {
-      name: 'New Contact',
-      address: 'New Address',
-      email: 'newcontact@example.com',
-    };
-    setContacts([...contacts, newContact]);
-  };
+  const { data, loading, error } = useQuery(GET_CONTACTS);
+  const [addContact] = useMutation(ADD_CONTACT);
+  const [updateContact] = useMutation(UPDATE_CONTACT);
+  const [deleteContact] = useMutation(DELETE_CONTACT);
 
   useEffect(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      setContacts(JSON.parse(savedContacts));
+    if (data) {
+      setContacts(data.contacts);
     }
-  }, []);
+  }, [data]);
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const handleUpdate = async (id) => {
+    try {
+      const updatedContact = await updateContact({
+        variables: {
+          id: contacts[id].id,
+          input: { name: 'Updated Contact' }, // Replace with your update logic
+        },
+      });
+      const updatedContacts = contacts.map((contact, index) => {
+        if (index === id) {
+          return updatedContact.data.updateContact;
+        }
+        return contact;
+      });
+      setContacts(updatedContacts);
+    } catch (error) {
+      console.log('Error updating contact:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteContact({
+        variables: { id: contacts[id].id },
+      });
+      const updatedContacts = contacts.filter((contact, index) => index !== id);
+      setContacts(updatedContacts);
+    } catch (error) {
+      console.log('Error deleting contact:', error);
+    }
+  };
+
+  const handleNewContact = async () => {
+    try {
+      const newContact = {
+        name: 'New Contact',
+        address: 'New Address',
+        email: 'newcontact@example.com',
+      };
+      const addedContact = await addContact({
+        variables: { input: newContact },
+      });
+      setContacts([...contacts, addedContact.data.addContact]);
+    } catch (error) {
+      console.log('Error adding contact:', error);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching contacts: {error.message}</div>;
+  }
 
   return (
     <>
@@ -71,6 +109,7 @@ function AddressBook() {
 }
 
 export default AddressBook;
+
 
 
 
