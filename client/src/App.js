@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import ImageSearch from './pages/ImageSearch';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import Postcard from './components/Postcard';
+import Stripe from './components/Stripe'
 
 // Create Apollo Client instance
 const client = new ApolloClient({
@@ -27,6 +28,7 @@ function App() {
             <Route path="/address" element={<AddressBook />} />
             <Route path="/imagesearch" element={<ImageSearch />} />
             <Route path="/postcard" element={<Postcard />} />
+            <Route path="/stripe" element={<Stripe/>}/>
           </Routes>
         </Router>
       </div>
