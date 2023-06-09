@@ -1,46 +1,28 @@
-// TODO: Fix for ADDRESS BOOK
-
-
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
 const typeDefs = gql`
-  type User {
-    _id: ID!
-    username: String!
+  type Contact {
+    id: ID!
+    name: String!
+    address: String!
     email: String!
-    savedBooks: [Book]
   }
 
-  type Book {
-    bookId: ID!
-    authors: [String!]
-    description: String!
-    image: String!
-    link: String!
-    title: String!
-  }
-type Auth{
-  token:ID!
-  user:User
-}
-   
-input BookInput {
-  bookId: ID!
-  authors: [String!]
-  description: String!
-  image: String!
-  link: String!
-  title: String!
-}
   type Query {
-    me:User
+    contacts: [Contact!]!
   }
 
   type Mutation {
-   login(email:String!, password:String!):Auth
-   createUser(username:String!, email:String!, password:String!):Auth
-   saveBook(bookData: BookInput):User
-   deleteBook(bookId:ID):User
+    addContact(input: ContactInput!): Contact!
+    updateContact(id: ID!, input: ContactInput!): Contact!
+    deleteContact(id: ID!): Boolean!
+  }
+
+  input ContactInput {
+    name: String
+    address: String
+    email: String
   }
 `;
+
 module.exports = typeDefs;

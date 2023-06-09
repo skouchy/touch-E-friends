@@ -1,68 +1,33 @@
-// TODO: update to associate ADDRESS BOOK
-
-const { AuthenticationError } = require('apollo-server-express');
-const { signToken } = require('../utils/auth');
-const { User } = require('../models');
+const contacts = [
+  { id: '1', name: 'John Doe', address: '123 Main St', email: 'johndoe@example.com' },
+  { id: '2', name: 'Jane Smith', address: '456 Elm St', email: 'janesmith@example.com' },
+];
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
-      if (context.user) {
-        return User.findOne({ _id: context.user._id });
-      }
-      throw new AuthenticationError("please find another one")
-    }
+    contacts: () => contacts,
   },
   Mutation: {
-    createUser: async (parent, args) => {
-      console.log(args)
-      try{
-
-        const user = await User.create(args);
-        const token = signToken(user)
-        return { token, user };
-      }
-      catch(err){
-        console.log(err)
-      }
+    addContact: (_, { input }) => {
+      const newContact = { id: String(contacts.length + 1), ...input };
+      contacts.push(newContact);
+      return newContact;
     },
-    // saveBook: async (parent, { bookData }, context) => {
-    //   if (context.user) {
-    //     const savebookData = await User.findOneAndUpdate(
-    //       { _id: context.user._id },
-    //       { $push: { savedBooks: bookData } },
-    //     { new: true }
-    //     );
-    //     return savebookData
-    //   }
-    //   throw new AuthenticationError("please find another one")
-    // },
-    // deleteBook: async (parent, { bookId }, context) => {
-    //   if (context.user) {
-    //     const deletebookData = await User.findOneAndUpdate(
-    //       { _id: context.user._id },
-    //       { $pull: { savedBooks: bookId } },
-    //     { new: true }
-    //     );
-    //     return savebookData
-    //   }
-    //   throw new AuthenticationError("please find another one")
-    // },
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
-
-      if (!user) {
-        throw new AuthenticationError('No profile with this email found!');
+    updateContact: (_, { id, input }) => {
+      const contactIndex = contacts.findIndex((contact) => contact.id === id);
+      if (contactIndex !== -1) {
+        contacts[contactIndex] = { ...contacts[contactIndex], ...input };
+        return contacts[contactIndex];
       }
-
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw new AuthenticationError('Incorrect password!');
+      throw new Error('Contact not found');
+    },
+    deleteContact: (_, { id }) => {
+      const contactIndex = contacts.findIndex((contact) => contact.id === id);
+      if (contactIndex !== -1) {
+        contacts.splice(contactIndex, 1);
+        return true;
       }
-
-      const token = signToken(user);
-      return { token, user };
+      throw new Error('Contact not found');
     },
   },
 };
