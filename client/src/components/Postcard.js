@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import './Postcard.css'; // Import the CSS file
+import './Postcard.css'; 
 
 function Postcard() {
   const { state } = useLocation();
