@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ImageSearch from './pages/ImageSearch';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import Postcard from './components/Postcard';
 
 // Create Apollo Client instance
 const client = new ApolloClient({
@@ -25,6 +26,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/address" element={<AddressBook />} />
             <Route path="/imagesearch" element={<ImageSearch />} />
+            <Route path="/postcard" element={<Postcard />} />
           </Routes>
         </Router>
       </div>
