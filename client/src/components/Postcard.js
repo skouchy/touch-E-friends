@@ -1,26 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import './Postcard.css'; // Import the CSS file
 
 function Postcard() {
-  // const { selectedImage } = props;
-  let {state}= useLocation();
-  console.log(state)
+  const { state } = useLocation();
+  const [savedContact, setSavedContact] = useState(null);
 
-  // if (!selectedImage) {
-  //   // Handle the case when no image is selected
-  //   return <div>No image selected.</div>;
-  // }
+  useEffect(() => {
+    // Retrieve the saved contact information from localStorage
+    const savedContactData = localStorage.getItem('savedContact');
+
+    if (savedContactData) {
+      // Parse the JSON string back into an object
+      const savedContactObj = JSON.parse(savedContactData);
+      setSavedContact(savedContactObj);
+    }
+  }, []);
 
   return (
-    <div>
-      {/* Render the postcard using the selectedImage */}
-      <h2>Postcard</h2>
-      {<img src={state.selectedImage.urls.small} alt={state.selectedImage.alt_description} /> }
-    </div>
+    <>
+      <Navbar />
+      <div className="postcard-container">
+        <h2>Postcard Preview</h2>
+        <div className="front-container">
+          <img src={state.selectedImage.urls.small} alt={state.selectedImage.alt_description} />
+        </div>
+        <div className="back-container">
+          {/* Display contact info here */}
+          {savedContact && (
+            <div>
+              <h2>{savedContact.name}</h2>
+              <p>{savedContact.address}</p>
+              <p>{savedContact.email}</p>
+            </div>
+          )}
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }
 
 export default Postcard;
+
 
 
 
