@@ -1,4 +1,4 @@
 const User = require('./User');
-const Friend = require('./Friend');
+// const Friend = require('./Friend');
 
-module.exports = { User, Friend };
+module.exports = { User };

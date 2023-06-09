@@ -1,9 +1,9 @@
-const { Schema, model } = require('mongoose');
+const { Schema } = require('mongoose');
 
 const friendSchema = new Schema({
   name: {
     type: String,
-    required: 'You need to include a name!',
+    // required: 'You need to include a name!',
     minlength: 1,
     maxlength: 100
   },
@@ -20,6 +20,6 @@ const friendSchema = new Schema({
   }
 });
 
-const Friend = model('Friend', friendSchema);
+// const Friend = model('Friend', friendSchema);
 
-module.exports = Friend;
+module.exports = friendSchema;

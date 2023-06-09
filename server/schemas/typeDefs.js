@@ -25,8 +25,7 @@ const typeDefs = gql`
     }
 
     input FriendInput {
-        _id: ID!
-        name: String!
+        name: String
         phone: String
         email: String
         address: String
@@ -45,7 +44,7 @@ const typeDefs = gql`
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(email: String!, password: String!, username: String!): Auth
-        addFriend(friendData: FriendInput!): User
+        addFriend(friendList: FriendInput): User
         removeFriend(_id: ID!): User
         # editFriend
     }

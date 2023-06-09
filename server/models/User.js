@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
+const friendSchema = require('./Friend');
 
 const userSchema = new Schema(
     {
@@ -22,12 +23,7 @@ const userSchema = new Schema(
             minlength: 5
         },
         // set friends to be an array of data that adheres to the friendSchema
-        friends: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Friend'
-            }
-        ]
+        friends: [friendSchema]
     },
     // set this to use virtual below
     {
