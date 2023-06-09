@@ -35,4 +35,48 @@
     background-color: white;
     color: black;
   }
+  .postcard-overlay {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Example overlay background color */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 9999; /* Adjust the z-index as needed */
+  }
+  
+  .postcard-container {
+    background-color: #ffffff; /* Example container background color */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Example box shadow */
+  }
+  
+  /* Example styles for the elements inside the container */
+  .postcard-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .postcard-container p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .postcard-container .btnA {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50; /* Example button background color */
+    color: #ffffff; /* Example button text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  
   

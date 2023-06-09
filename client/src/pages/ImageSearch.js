@@ -1,9 +1,9 @@
-import React,{useState} from 'react';
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import axios from "axios"
-import './ImageSearch.css'
-
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
+import axios from 'axios';
+import './ImageSearch.css';
 
 function ImageSearch() {
   const [query, setQuery] = useState('');
@@ -21,28 +21,35 @@ function ImageSearch() {
   };
 
   return (
-    <><Navbar />
-      <div className='findimg-ctn'>
-        <h1 className='title'>Search for Image!</h1>
+    <>
+      <Navbar />
+      <div className="findimg-ctn">
+        <h1 className="title">Search for Image!</h1>
         <input
           type="text"
           placeholder="Search images..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)} />
-        <button className='srchbtn' onClick={searchImages}>Search</button>
-        <div className='grid-container'>
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button className="srchbtn" onClick={searchImages}>
+          Search
+        </button>
+        <div className="grid-container">
           {images.map((image) => (
             <div className="grid-item" key={image.id}>
-              <img src={image.urls.small} alt={image.alt_description} />
+              <Link to="/postcard" state={{ selectedImage: image}} >
+                <img src={image.urls.small} alt={image.alt_description} />
+              </Link>
+              
+                
+              
             </div>
           ))}
-
         </div>
         <Footer />
       </div>
     </>
   );
 }
-
 
 export default ImageSearch;

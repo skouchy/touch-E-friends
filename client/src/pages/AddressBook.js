@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
-import {ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
+import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
 import { GET_CONTACTS } from '../utils/queries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './AddressBook.css';
+
 
 function AddressBook() {
   const [contacts, setContacts] = useState([]);
@@ -13,6 +13,8 @@ function AddressBook() {
   const [addContact] = useMutation(ADD_CONTACT);
   const [updateContact] = useMutation(UPDATE_CONTACT);
   const [deleteContact] = useMutation(DELETE_CONTACT);
+  const [showPostcard, setShowPostcard] = useState(false);
+  const [postcardData, setPostcardData] = useState({});
 
   useEffect(() => {
     if (data) {
@@ -68,6 +70,25 @@ function AddressBook() {
     }
   };
 
+  const handleContactSelect = (contact) => {
+    setShowPostcard(true);
+    setPostcardData(contact);
+  };
+
+  const handleClosePostcard = () => {
+    setShowPostcard(false);
+    setPostcardData({});
+  };
+
+  function handleSaveContact() {
+    // Save the contact information to localStorage or a state management solution
+    // For example, using localStorage:
+    localStorage.setItem('savedContact', JSON.stringify(postcardData));
+  
+    // Navigate to the image search page
+    window.location.href = '/imagesearch';
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -93,14 +114,23 @@ function AddressBook() {
                 <p>{contact.email}</p>
                 <button className='btnA' onClick={() => handleUpdate(index)}>Update</button>
                 <button className='btnA' onClick={() => handleDelete(index)}>Delete</button>
+                <button className='btnA' onClick={() => handleContactSelect(contact)}>Create Postcard</button>
               </div>
             ))}
           </div>
         </div>
 
-        <Link to="/imageSearch">
-          <button className='btnA'>Image Search</button>
-        </Link>
+        {showPostcard && (
+          <div className="postcard-overlay">
+            <div className="postcard-container">
+              <h2>{postcardData.name}</h2>
+              <p>{postcardData.address}</p>
+              <p>{postcardData.email}</p>
+              <button className='btnA' onClick={handleSaveContact}>Send Contact</button>
+              <button className='btnA' onClick={handleClosePostcard}>Close Postcard</button>
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />
@@ -109,108 +139,3 @@ function AddressBook() {
 }
 
 export default AddressBook;
-
-
-
-
-
-
-// TODO: Update for Address Book 
-
-// import React from 'react';
-// import {
-//   Container,
-//   Card,
-//   Button,
-//   Row,
-//   Col
-// } from 'react-bootstrap';
-
-// import { useQuery, useMutation } from '@apollo/client';
-// import { QUERY_ME } from '../utils/queries';
-// import { REMOVE_BOOK } from '../utils/mutations';
-// import { removeBookId } from '../utils/localStorage';
-
-// import Auth from '../utils/auth';
-
-// const SavedBooks = () => {
-//   const { loading, data } = useQuery(QUERY_ME);
-//   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
-
-//   const userData = data?.me || {};
-
-//   // create function that accepts the book's mongo _id value as param and deletes the book from the database
-//   const handleDeleteBook = async (bookId) => {
-//     // get token
-//     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-//     if (!token) {
-//       return false;
-//     }
-
-//     try {
-//       const { data } = await removeBook({
-//         variables: { bookId },
-//       });
-
-//       // upon success, remove book's id from localStorage
-//       removeBookId(bookId);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   if (loading) {
-//     return <h2>LOADING...</h2>;
-//   }
-
-//   return (
-//     <>
-//       <div fluid className="text-light bg-dark p-5">
-//         <Container>
-//           <h1>Viewing {userData.username}'s books!</h1>
-//         </Container>
-//       </div>
-//       <Container>
-//         <h2 className='pt-5'>
-//           {userData.savedBooks?.length
-//             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'
-//             }:`
-//             : 'You have no saved books!'}
-//         </h2>
-//         <div>
-//           <Row>
-//             {userData.savedBooks?.map((book) => {
-//               return (
-//                 <Col md="4">
-//                   <Card key={book.bookId} border="dark">
-//                     {book.image ? (
-//                       <Card.Img
-//                         src={book.image}
-//                         alt={`The cover for ${book.title}`}
-//                         variant="top"
-//                       />
-//                     ) : null}
-//                     <Card.Body>
-//                       <Card.Title>{book.title}</Card.Title>
-//                       <p className="small">Authors: {book.authors}</p>
-//                       <Card.Text>{book.description}</Card.Text>
-//                       <Button
-//                         className="btn-block btn-danger"
-//                         onClick={() => handleDeleteBook(book.bookId)}
-//                       >
-//                         Delete this Book!
-//                       </Button>
-//                     </Card.Body>
-//                   </Card>
-//                 </Col>
-//               );
-//             })}
-//           </Row>
-//         </div>
-//       </Container>
-//     </>
-//   );
-// };
-
-// export default SavedBooks;
