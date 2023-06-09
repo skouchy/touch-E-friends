@@ -1,0 +1,17 @@
+.postcard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+   
+  .front-container {
+    margin-bottom: 20px;
+  }
+  
+  .back-container {
+    margin-top: 20px;
+  }
+  
