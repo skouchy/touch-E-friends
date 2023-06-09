@@ -28,7 +28,7 @@ function Postcard() {
           <img src={state.selectedImage.urls.small} alt={state.selectedImage.alt_description} />
         </div>
         <div className="back-container">
-          {/* Display contact info here */}
+          {/* Display contact info here */} 
           {savedContact && (
             <div>
               <h2>{savedContact.name}</h2>
