@@ -12,7 +12,7 @@ const resolvers = {
             if (context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
                     .select('-__v -password')
-                    .populate('friends');
+                    .populate('contacts');
                 console.log(userData);
                 return userData;
             }
@@ -43,24 +43,24 @@ const resolvers = {
             console.log(`USER LOGIN: ${token}  ${user}`);
             return { token, user };
         },
-        addFriend: async (parent, { friendList }, context) => {
-            console.log(`USER PLUSS:`, friendList);
+        addContact: async (parent, { contactList }, context) => {
+            console.log(`USER PLUSS:`, contactList);
             if (context.user) {
-                // const newFriend = await Friend.create(friendList);
+                // const newContact = await Contact.create(contactList);
                 const userPlus = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $push: { friends: friendList } },
+                    { $push: { contacts: contactList } },
                     { new: true }
                 )
                 return userPlus;
             }
             throw new AuthenticationError('You need to be logged in!');
         },
-        removeFriend: async (parent, { _id }, context) => {
+        removeContact: async (parent, { _id }, context) => {
             if (context.user) {
                 const userMinus = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { friends: { _id } } },
+                    { $pull: { contacts: { _id } } },
                     { new: true }
                 )
                 console.log(`USER MINUS: ${userMinus}`);
@@ -68,7 +68,7 @@ const resolvers = {
             }
             throw new AuthenticationError('You need to be logged in!');
         },
-        // updateFriend: async (parent, { friendData }, context) => {
+        // updateContact: async (parent, { contactData }, context) => {
         //     if (context.user) {
         //         const userEdit = await User. findOneAndUpdate(
         //             { _id: context.user._id },
@@ -76,7 +76,7 @@ const resolvers = {
         //         )
         //     }
         // }
-        // editFriend: async (parent, args, context) => {
+        // editContact: async (parent, args, context) => {
         // const contactIndex = contacts.findIndex((contact) => contact.id === id);
         //       if (contactIndex !== -1) {
         //         contacts[contactIndex] = { ...contacts[contactIndex], ...input };
@@ -102,7 +102,7 @@ const resolvers = {
 
 //   },
 // };
-// removeFriend: async (parent, args, context) => {
+// removeContact: async (parent, args, context) => {
 // const contactIndex = contacts.findIndex((contact) => contact.id === id);
 //       if (contactIndex !== -1) {
 //         contacts.splice(contactIndex, 1);

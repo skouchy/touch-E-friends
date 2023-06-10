@@ -1,12 +1,19 @@
 import { gql } from '@apollo/client';
 
-export const GET_CONTACTS = gql`
-  query GetContacts {
+export const QUERY_ME = gql`
+{
+  me {
+    _id
+    username
+    email
     contacts {
-      id
+      _id
       name
-      address
       email
+      phone
+      address
     }
+    contactCount
   }
+}
 `;

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useQuery } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar'
 import videoBG from "../assets/video-2.mp4"

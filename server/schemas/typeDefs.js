@@ -7,11 +7,11 @@ const typeDefs = gql`
         _id: ID
         username: String
         email: String
-        friendCount: Int
-        friends: [Friend]
+        contactCount: Int
+        contacts: [Contact]
     }
     
-    type Friend {
+    type Contact {
         _id: ID!
         name: String!
         phone: String
@@ -24,7 +24,7 @@ const typeDefs = gql`
         user: User
     }
 
-    input FriendInput {
+    input ContactInput {
         name: String
         phone: String
         email: String
@@ -35,18 +35,18 @@ const typeDefs = gql`
         me: User
         # users: [User]
         # user(username: String!): User
-        # # friends is the query, String is the type
-        # friends(name: String): [Friend] # creating custom dataType (each friend that returns will include ALL Friend fields
+        # # contacts is the query, String is the type
+        # contacts(name: String): [Contact] # creating custom dataType (each contact that returns will include ALL Contact fields
         # # & also instructs the query that we'll return an array
-        # friend(_id: ID!): Friend  
+        # contact(_id: ID!): Contact  
     }
 
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(email: String!, password: String!, username: String!): Auth
-        addFriend(friendList: FriendInput): User
-        removeFriend(_id: ID!): User
-        # editFriend
+        addContact(contactList: ContactInput): User
+        removeContact(_id: ID!): User
+        # editContact
     }
 `;
 

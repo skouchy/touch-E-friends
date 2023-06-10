@@ -1,21 +1,25 @@
-const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
 
-const contactSchema = new mongoose.Schema({
+const contactSchema = new Schema({
   name: {
     type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
+    // required: 'You need to include a name!',
+    minlength: 1,
+    maxlength: 100
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    match: [/.+@.+\..+/, 'Must use a valid email address']
   },
+  phone: {
+    type: String,
+    match: [/^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/, 'Please input a valid phone number']
+  },
+  address: {
+    type: String
+  }
 });
 
-const Contact = mongoose.model('Contact', contactSchema);
 
-module.exports = Contact;
+
+module.exports = contactSchema;

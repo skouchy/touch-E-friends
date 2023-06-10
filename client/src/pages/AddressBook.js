@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
-import { GET_CONTACTS } from '../utils/queries';
+import { QUERY_ME } from '../utils/queries';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './AddressBook.css';
@@ -9,7 +9,7 @@ import './AddressBook.css';
 
 function AddressBook() {
   const [contacts, setContacts] = useState([]);
-  const { data, loading, error } = useQuery(GET_CONTACTS);
+  const { loading, data, error } = useQuery(QUERY_ME);
   const [addContact] = useMutation(ADD_CONTACT);
   const [updateContact] = useMutation(UPDATE_CONTACT);
   const [deleteContact] = useMutation(DELETE_CONTACT);
