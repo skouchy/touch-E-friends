@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
-import { GET_CONTACTS } from '../utils/queries';
-import Auth from '../utils/Auth';
-// import Navbar from '../components/Navbar';
-// import Footer from '../components/Footer';
+import { QUERY_ME } from '../utils/queries';
+import Auth from '../utils/auth';
+import Login from './Login';
 import './AddressBook.css';
 
 
 function AddressBook() {
   const [contacts, setContacts] = useState([]);
-  const { data, loading, error } = useQuery(GET_CONTACTS);
+  // const { username: userParam } = useParams();
   const [addContact] = useMutation(ADD_CONTACT);
   const [updateContact] = useMutation(UPDATE_CONTACT);
   const [deleteContact] = useMutation(DELETE_CONTACT);
   const [showPostcard, setShowPostcard] = useState(false);
   const [postcardData, setPostcardData] = useState({});
+  const { data, loading, error } = useQuery(QUERY_ME, {
+    // variables: { username: userParam }
+  });
 
   useEffect(() => {
     if (data) {
       setContacts(data.contacts);
     }
   }, [data]);
+  // const user = data?.me || data?.user || {};
+
+  if (Auth.loggedIn() && Auth.getAddressBook()) {
+    return <Navigate to='/address' />
+  };
+
 
   const handleUpdate = async (id, field, value) => {
     try {
       const updatedContact = await updateContact({
         variables: {
           id: contacts[id].id,
-          input: { [field]:value }, // Replace with your update logic
+          input: { [field]: value }, // Replace with your update logic
         },
       });
       const updatedContacts = contacts.map((contact, index) => {
@@ -85,7 +94,7 @@ function AddressBook() {
     // Save the contact information to localStorage or a state management solution
     // For example, using localStorage:
     localStorage.setItem('savedContact', JSON.stringify(postcardData));
-  
+
     // Navigate to the image search page
     window.location.href = '/imagesearch';
   }
@@ -100,7 +109,7 @@ function AddressBook() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className='address-ctn'>
         <h1>Address Book Page</h1>
 
@@ -136,9 +145,10 @@ function AddressBook() {
             </div>
           </div>
         )}
+        <div className="mb-3">{<Login />}</div>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

@@ -4,7 +4,7 @@ import decode from 'jwt-decode';
 // create a new class to instantiate for a user
 class Auth {
   // get user data
-  getProfile() {
+  getAddressBook() {
     return decode(this.getToken());
   }
 
@@ -36,7 +36,7 @@ class Auth {
   login(idToken) {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
-    window.location.assign('/addressbook');
+    window.location.assign('/address');
   }
 
   logout() {

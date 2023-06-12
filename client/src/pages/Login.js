@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
-import Auth from '../utils/auth';
-import { Navigate } from 'react-router-dom';
 
-import Auth from '../utils/Auth';
+import Auth from '../utils/auth';
 import "./Login.css"
 
+
 export default function Login() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [validated] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const [loginState, setLoginState] = useState({ email: '', password: '' });
+
   const [login, { error }] = useMutation(LOGIN_USER);
 
-  useEffect(() => {
-    if (error) {
-      setShowAlert(true);
-    } else {
-      setShowAlert(false);
-    }
-  }, [error]);
-
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setLoginState({
+      ...loginState,
       [name]: value
     });
   };
@@ -32,34 +23,29 @@ export default function Login() {
 
   const handleLoginForm = async (event) => {
     event.preventDefault();
-
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropogation();
-    }
+    
 
     try {
       const { data } = await login({
         // setting variables field to be an object with key/value pairs
-        variables: { ...formData },
+        variables: { ...loginState }
       });
       console.log(data);
       console.log('user successfully logged in!');
       // when log in is successful, User is directed to homepage
       Auth.login(data.login.token);
-      // Navigate
+      setLoginState({
+        email: '',
+        password: ''
+      })
     } catch (error) {
       console.error(error);
+      setLoginState({
+        email: '',
+        password: ''
+      });
     }
 
-    setFormData({
-      email: '',
-      password: ''
-    });
-    // Perform login logic here, e.g., API call to validate credentials
-    // If successful, navigate to the next page using navigate('/next-page')
-    // navigate('/address');
   };
 
 
@@ -67,21 +53,15 @@ export default function Login() {
     <>
       <div className='login-container'>
         <h1>Login Page</h1>
-        <form noValidate validated={validated} onSubmit={handleLoginForm}>
-          <Alert dismissable onClose={() => setShowAlert(false)}
-          show={showAlert}
-          variant="danger"
-          >
-            Log In credentials not accepted. Try again, suckaa
-          </Alert>
+        <form onSubmit={handleLoginForm}>
           <input
             className="form-input"
             placeholder="Your email"
             name="email"
             type="email"
             id="login-email"
-            value={formData.email}
-            onChange={handleInputChange}
+            value={loginState.email}
+            onChange={handleChange}
           />
           <input
             className="form-input"
@@ -89,14 +69,15 @@ export default function Login() {
             name="password"
             type="password"
             id="login-password"
-            value={formData.password}
-            onChange={handleInputChange}
+            value={loginState.password}
+            onChange={handleChange}
           />
           <br />
           <button type="submit">Login</button>
+          {error && <div>Login Failed.. Try again!</div>}
         </form>
-        {error && <div>Login Failed.. Try again!</div>}
       </div>
+
     </>
   );
 }
