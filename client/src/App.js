@@ -4,12 +4,13 @@ import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@ap
 // Stores current request object
 import { setContext } from '@apollo/client/link/context';
 import Home from './pages/Home';
-// import Footer from './components/Footer';
+import Footer from './components/Footer';
 // import AddressBook from './pages/AddressBook';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import UserHomeContacts from './pages/UserHomeContacts';
 // import ImageSearch from './pages/ImageSearch';
+import Navbar from './components/Navbar';
 // import Postcard from './components/Postcard';
 
 const httpLink = createHttpLink({
@@ -38,20 +39,20 @@ function App() {
     <ApolloProvider client={client}>
 
       <Router>
+        <Navbar />
         <div className='container'>
           <Routes>
-
             {/* <Route path="/home" Component={<Home />} /> */}
-            <Route path="/login" Component={Login} />
             <Route path="/signup" Component={SignUp} />
+            <Route path="/login" Component={Login} />
             <Route path="/myaddressbook" Component={UserHomeContacts} />
             {/* <Route path="/addressbook" Component={<AddressBook />} /> */}
             {/* <Route path="/imagesearch" Component={<ImageSearch />} /> */}
             {/* <Route path="/postcard" Component={<Postcard />} /> */}
-            <Route path="*" Component={Home} />
+            <Route path="/" Component={Home} />
           </Routes>
         </div>
-        {/* <Footer /> */}
+        <Footer />
       </Router>
 
     </ApolloProvider>

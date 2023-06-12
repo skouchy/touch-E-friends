@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
 import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
-import Auth from '../utils/Auth';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// import Auth from '../utils/Auth';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
 import './AddressBook.css';
 
 
@@ -102,7 +102,7 @@ function AddressBook() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className='address-ctn'>
         <h1>Address Book Page</h1>
 
@@ -136,7 +136,7 @@ function AddressBook() {
         )}
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

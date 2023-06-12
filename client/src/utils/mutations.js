@@ -28,18 +28,19 @@ mutation addUser($username: String!, $email: String!, $password: String!) {
 export const ADD_CONTACT = gql`
   mutation addContact($input: ContactInput!) {
     addContact(input: $input) {
-      id
+      _id
       name
       address
       email
+      phone
     }
   }
 `;
 
 export const UPDATE_CONTACT = gql`
-  mutation UpdateContact($id: ID!, $input: ContactInput!) {
-    updateContact(id: $id, input: $input) {
-      id
+  mutation updateContact($id: ID!, $input: ContactInput!) {
+    updateContact(_id: $id, input: $input) {
+      _id
       name
       address
       email
@@ -48,7 +49,7 @@ export const UPDATE_CONTACT = gql`
 `;
 
 export const DELETE_CONTACT = gql`
-  mutation DeleteContact($id: ID!) {
-    deleteContact(id: $id)
+  mutation deleteContact($id: ID!) {
+    deleteContact(_id: $id)
   }
 `;

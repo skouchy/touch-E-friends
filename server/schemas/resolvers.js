@@ -17,7 +17,8 @@ const resolvers = {
                 return userData;
             }
             throw new AuthenticationError('Not logged in');
-        }
+        },
+        contacts: () => contacts,
     },
     Mutation: {
         addUser: async (parent, args) => {
@@ -43,31 +44,54 @@ const resolvers = {
             console.log(`USER LOGIN: ${token}  ${user}`);
             return { token, user };
         },
-        addContact: async (parent, { contactList }, context) => {
-            console.log(`USER PLUSS:`, contactList);
-            if (context.user) {
-                // const newContact = await Contact.create(contactList);
-                const userPlus = await User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $push: { contacts: contactList } },
-                    { new: true }
-                )
-                return userPlus;
-            }
-            throw new AuthenticationError('You need to be logged in!');
+        addContact: (_, { input }, context) => {
+            const newContact = { id: String(contacts.length + 1), ...input };
+            contacts.push(newContact);
+            return newContact;
         },
-        removeContact: async (parent, { _id }, context) => {
-            if (context.user) {
-                const userMinus = await User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $pull: { contacts: { _id } } },
-                    { new: true }
-                )
-                console.log(`USER MINUS: ${userMinus}`);
-                return userMinus;
+        editContact: async (parent, args, context) => {
+            const contactIndex = contacts.findIndex((contact) => contact.id === id);
+            if (contactIndex !== -1) {
+                contacts[contactIndex] = { ...contacts[contactIndex], ...input };
+                return contacts[contactIndex];
             }
-            throw new AuthenticationError('You need to be logged in!');
+            throw new Error('Contact not found');
         },
+        removeContact: async (parent, args, context) => {
+            const contactIndex = contacts.findIndex((contact) => contact.id === id);
+            if (contactIndex !== -1) {
+                contacts.splice(contactIndex, 1);
+                return true;
+            }
+            throw new Error('Contact not found');
+        },
+
+    }
+        // addContact: async (parent, { contactList }, context) => {
+        //     console.log(`USER PLUSS:`, contactList);
+        //     if (context.user) {
+        //         // const newContact = await Contact.create(contactList);
+        //         const userPlus = await User.findOneAndUpdate(
+        //             { _id: context.user._id },
+        //             { $push: { contacts: contactList } },
+        //             { new: true }
+        //         )
+        //         return userPlus;
+        //     }
+        //     throw new AuthenticationError('You need to be logged in!');
+        // },
+        // removeContact: async (parent, { _id }, context) => {
+        //     if (context.user) {
+        //         const userMinus = await User.findOneAndUpdate(
+        //             { _id: context.user._id },
+        //             { $pull: { contacts: { _id } } },
+        //             { new: true }
+        //         )
+        //         console.log(`USER MINUS: ${userMinus}`);
+        //         return userMinus;
+        //     }
+        //     throw new AuthenticationError('You need to be logged in!');
+        // },
         // updateContact: async (parent, { contactData }, context) => {
         //     if (context.user) {
         //         const userEdit = await User. findOneAndUpdate(
@@ -76,39 +100,8 @@ const resolvers = {
         //         )
         //     }
         // }
-        // editContact: async (parent, args, context) => {
-        // const contactIndex = contacts.findIndex((contact) => contact.id === id);
-        //       if (contactIndex !== -1) {
-        //         contacts[contactIndex] = { ...contacts[contactIndex], ...input };
-        //         return contacts[contactIndex];
-        //       }
-        //       throw new Error('Contact not found');
-        // },
-
-    }
-
+        
+        
 };
-
-// const resolvers = {
-//   Query: {
-//     contacts: () => contacts,
-//   },
-//   Mutation: {
-//     addContact: (_, { input }) => {
-//       const newContact = { id: String(contacts.length + 1), ...input };
-//       contacts.push(newContact);
-//       return newContact;
-//     },
-
-//   },
-// };
-// removeContact: async (parent, args, context) => {
-// const contactIndex = contacts.findIndex((contact) => contact.id === id);
-//       if (contactIndex !== -1) {
-//         contacts.splice(contactIndex, 1);
-//         return true;
-//       }
-//       throw new Error('Contact not found');
-//     },
 
 module.exports = resolvers;

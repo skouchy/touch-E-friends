@@ -36,7 +36,7 @@ const typeDefs = gql`
         # users: [User]
         # user(username: String!): User
         # # contacts is the query, String is the type
-        # contacts(name: String): [Contact] # creating custom dataType (each contact that returns will include ALL Contact fields
+        contacts(name: String): User # creating custom dataType (each contact that returns will include ALL Contact fields
         # # & also instructs the query that we'll return an array
         # contact(_id: ID!): Contact  
     }
@@ -46,7 +46,7 @@ const typeDefs = gql`
         addUser(email: String!, password: String!, username: String!): Auth
         addContact(contactList: ContactInput): User
         removeContact(_id: ID!): User
-        # editContact
+        editContact(_id: ID!): User
     }
 `;
 
