@@ -22,12 +22,12 @@ function AddressBook() {
     }
   }, [data]);
 
-  const handleUpdate = async (id) => {
+  const handleUpdate = async (id, field, value) => {
     try {
       const updatedContact = await updateContact({
         variables: {
           id: contacts[id].id,
-          input: { name: 'Updated Contact' }, // Replace with your update logic
+          input: { [field]:value }, // Replace with your update logic
         },
       });
       const updatedContacts = contacts.map((contact, index) => {
@@ -112,7 +112,11 @@ function AddressBook() {
                 <h2>{contact.name}</h2>
                 <p>{contact.address}</p>
                 <p>{contact.email}</p>
-                <button className='btnA' onClick={() => handleUpdate(index)}>Update</button>
+                <button className='btnA' onClick={() => {
+                  const field = prompt('Enter the field to update (name, email, or address):');
+                  const value = prompt(`Enter the new value for ${field}:`);
+                  handleUpdate(index, field, value);
+                }}>Update</button>
                 <button className='btnA' onClick={() => handleDelete(index)}>Delete</button>
                 <button className='btnA' onClick={() => handleContactSelect(contact)}>Create Postcard</button>
               </div>
