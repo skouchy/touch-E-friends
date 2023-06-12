@@ -19,15 +19,22 @@ function Postcard() {
     }
   }, []);
 
+  const handleBuyStamp = ()=>{
+    window.location.href = "/stripe"
+
+  };
+
   return (
     <>
       <Navbar />
       <div className="postcard-container">
-        <h2>Postcard Preview</h2>
+        <h1>Postcard Preview</h1>
         <div className="front-container">
+          <h2>Front</h2>
           <img src={state.selectedImage.urls.small} alt={state.selectedImage.alt_description} />
         </div>
         <div className="back-container">
+          <h2>Back</h2>
           {/* Display contact info here */} 
           {savedContact && (
             <div>
@@ -37,6 +44,8 @@ function Postcard() {
             </div>
           )}
         </div>
+        <br></br>
+        <button onClick={handleBuyStamp}>Buy Stamp</button>
       </div>
       <Footer />
     </>
@@ -44,6 +53,10 @@ function Postcard() {
 }
 
 export default Postcard;
+
+
+
+
 
 
 
