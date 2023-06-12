@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
 import { GET_CONTACTS } from '../utils/queries';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Auth from '../utils/Auth';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
 import './AddressBook.css';
 
 
