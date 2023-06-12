@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
 import { QUERY_ME } from '../utils/queries';
+import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
+import Auth from '../utils/Auth';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './AddressBook.css';
@@ -15,6 +16,8 @@ function AddressBook() {
   const [deleteContact] = useMutation(DELETE_CONTACT);
   const [showPostcard, setShowPostcard] = useState(false);
   const [postcardData, setPostcardData] = useState({});
+
+  
 
   useEffect(() => {
     if (data) {

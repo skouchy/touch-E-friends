@@ -6,6 +6,7 @@ export const QUERY_ME = gql`
     _id
     username
     email
+    contactCount
     contacts {
       _id
       name
@@ -13,7 +14,17 @@ export const QUERY_ME = gql`
       phone
       address
     }
-    contactCount
   }
 }
 `;
+
+export const QUERY_CONTACT = gql`
+query contacts($id: ID!) {
+  contact(_id: $id) {
+    _id
+    name
+    email
+    phone
+    address
+  }
+}`
