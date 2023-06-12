@@ -20,7 +20,7 @@ Sending Postcards: Users can select contacts from their address book and send po
 Email Notifications: Users receive email notifications when a postcard is sent or received.
 
 ## Screenshot
-![Project Screenshot](./Assets/images/touche1.JPGtouche1) 
+![Project Screenshot](./Assets/images/touche1.JPG) 
 
 ## Usage
 Feel free to explore the portfolio and browse through the showcased projects. Click on the links to the GitHub repositories to access the source code and learn more about each project.
