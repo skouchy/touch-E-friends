@@ -32,13 +32,14 @@ const typeDefs = gql`
     }
 
     type Query { # just like a fetch{GET)
-        me: User  
+        me: User
+        getContacts: User
     }
 
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(email: String!, password: String!, username: String!): Auth
-        addContact(contactList: ContactInput): User
+        addContact(input: ContactInput!): User
         removeContact(_id: ID!): User
         editContact(_id: ID!): User
     }

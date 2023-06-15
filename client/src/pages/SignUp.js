@@ -61,7 +61,7 @@ export default function SignUp() {
               />
               <input
                 className="form-input"
-                placeholder="******"
+                autoComplete="current-password"
                 name="password"
                 type="password"
                 id="signup-password"

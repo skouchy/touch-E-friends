@@ -48,7 +48,7 @@ export default function Login() {
         <form onSubmit={handleLoginForm}>
         <input
                 className="form-input"
-                placeholder="Your email"
+                autoComplete="Your email"
                 name="email"
                 type="email"
                 id="login-email"
@@ -57,7 +57,7 @@ export default function Login() {
               />
               <input
                 className="form-input"
-                placeholder="******"
+                autoComplete="current-password"
                 name="password"
                 type="password"
                 id="login-password"

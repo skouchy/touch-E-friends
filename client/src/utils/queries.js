@@ -18,9 +18,9 @@ export const QUERY_ME = gql`
 }
 `;
 
-export const QUERY_CONTACT = gql`
-query contact($id: ID!) {
-  contact(_id: $id) {
+export const QUERY_CONTACTS = gql`
+query contacts($id: ID!) {
+  contacts(id: $id) {
     _id
     name
     email

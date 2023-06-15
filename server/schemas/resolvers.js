@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
+const { Error } = require('mongoose');
 
 
 const resolvers = {
@@ -14,6 +15,14 @@ const resolvers = {
                 return userData;
             }
             throw new AuthenticationError('Not logged in');
+        },
+        getContacts: async (parent, args, context) => {
+            if (context.user) {
+                const contactsData = await User.findOne({ token: context.user.token })
+                console.log(`contactsData: ${contactsData}`);
+                return contactsData;
+            }
+            throw new Error('getContacts aint happening')
         }
     },
     Mutation: {
@@ -40,12 +49,12 @@ const resolvers = {
             console.log(`USER LOGIN: ${token}  ${user}`);
             return { token, user };
         },
-        addContact: async (parent, { contactList }, context) => {
-                console.log(`USER PLUSS:`, contactList);
+        addContact: async (parent, { input }, context) => {
+                console.log(`USER PLUSS:`, input);
                 if (context.user) {
                     const userPlus = await User.findOneAndUpdate(
                         { _id: context.user._id },
-                        { $push: { contacts: contactList } },
+                        { $push: { input: input } },
                         { new: true }
                     )
                     return userPlus;

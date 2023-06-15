@@ -29,10 +29,16 @@ export const ADD_CONTACT = gql`
   mutation addContact($input: ContactInput!) {
     addContact(input: $input) {
       _id
-      name
-      address
+      username
       email
-      phone
+      contactCount
+      contacts {
+        _id
+        name
+        address
+        email
+        phone
+      }
     }
   }
 `;
