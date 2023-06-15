@@ -1,12 +1,11 @@
 {
-  "name": "project-mgmt-app",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "watch": "nodemon",
-    "seed": "node seeders/seeds.js"
+    "watch": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

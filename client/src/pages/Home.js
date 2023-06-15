@@ -1,6 +1,4 @@
 import React from 'react';
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar'
 import videoBG from "../assets/video-2.mp4"
 import { Button } from '../components/Button';
 import "./Home.css"
@@ -8,7 +6,6 @@ import "./Home.css"
 function Home() {
   return (
     <>
-      <Navbar />
       <div className='hero-container'>
         <video src={videoBG} autoPlay loop muted />
         <h1>Share your Adventures!!</h1>
@@ -22,7 +19,6 @@ function Home() {
           </Button>
         </div>
       </div>
-      <Footer/>
     </>
   );
 }

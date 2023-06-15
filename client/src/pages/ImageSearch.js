@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
 import axios from 'axios';
 import './ImageSearch.css';
 
@@ -10,6 +8,8 @@ function ImageSearch() {
   const [images, setImages] = useState([]);
 
   const searchImages = async () => {
+    console.log('suppppp');
+    console.log(process.env.REACT_APP_ACCESS_KEY);
     try {
       const response = await axios.get(
         `https://api.unsplash.com/search/photos?query=${query}&client_id=${process.env.REACT_APP_ACCESS_KEY}`
@@ -22,7 +22,6 @@ function ImageSearch() {
 
   return (
     <>
-      <Navbar />
       <div className="findimg-ctn">
         <h1 className="title">Search for Image!</h1>
         <input
@@ -46,7 +45,6 @@ function ImageSearch() {
             </div>
           ))}
         </div>
-        <Footer />
       </div>
     </>
   );

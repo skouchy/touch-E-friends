@@ -2,17 +2,14 @@ const { User } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 
-// const contacts = [
-//   { id: '1', name: 'John Doe', address: '123 Main St', email: 'johndoe@example.com' },
-//   { id: '2', name: 'Jane Smith', address: '456 Elm St', email: 'janesmith@example.com' },
-// ];
+
 const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
                     .select('-__v -password')
-                    .populate('friends');
+                    .populate('contacts');
                 console.log(userData);
                 return userData;
             }
@@ -23,7 +20,7 @@ const resolvers = {
         addUser: async (parent, args) => {
             const user = await User.create(args);
             const token = signToken(user);
-            console.log(`ADD USER ARGS: ${args}`);
+            console.log(`ADD USER ARGS:`, {args});
             return { token, user };
         },
         login: async (parent, { email, password }) => {
@@ -43,72 +40,40 @@ const resolvers = {
             console.log(`USER LOGIN: ${token}  ${user}`);
             return { token, user };
         },
-        addFriend: async (parent, { friendList }, context) => {
-            console.log(`USER PLUSS:`, friendList);
-            if (context.user) {
-                // const newFriend = await Friend.create(friendList);
-                const userPlus = await User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $push: { friends: friendList } },
-                    { new: true }
-                )
-                return userPlus;
+        addContact: async (parent, { contactList }, context) => {
+                console.log(`USER PLUSS:`, contactList);
+                if (context.user) {
+                    const userPlus = await User.findOneAndUpdate(
+                        { _id: context.user._id },
+                        { $push: { contacts: contactList } },
+                        { new: true }
+                    )
+                    return userPlus;
+                }
+                throw new AuthenticationError('You need to be logged in!');
+            },
+        editContact: async (parent, args, context) => {
+            const contactIndex = contacts.findIndex((contact) => contact.id === id);
+            if (contactIndex !== -1) {
+                contacts[contactIndex] = { ...contacts[contactIndex], ...input };
+                return contacts[contactIndex];
             }
-            throw new AuthenticationError('You need to be logged in!');
+            throw new Error('Contact not found');
         },
-        removeFriend: async (parent, { _id }, context) => {
-            if (context.user) {
-                const userMinus = await User.findOneAndUpdate(
-                    { _id: context.user._id },
-                    { $pull: { friends: { _id } } },
-                    { new: true }
-                )
-                console.log(`USER MINUS: ${userMinus}`);
-                return userMinus;
-            }
-            throw new AuthenticationError('You need to be logged in!');
-        },
-        // updateFriend: async (parent, { friendData }, context) => {
-        //     if (context.user) {
-        //         const userEdit = await User. findOneAndUpdate(
-        //             { _id: context.user._id },
-
-        //         )
-        //     }
-        // }
-        // editFriend: async (parent, args, context) => {
-        // const contactIndex = contacts.findIndex((contact) => contact.id === id);
-        //       if (contactIndex !== -1) {
-        //         contacts[contactIndex] = { ...contacts[contactIndex], ...input };
-        //         return contacts[contactIndex];
-        //       }
-        //       throw new Error('Contact not found');
-        // },
+        removeContact: async (parent, { _id }, context) => {
+                if (context.user) {
+                    const userMinus = await User.findOneAndUpdate(
+                        { _id: context.user._id },
+                        { $pull: { contacts: { _id } } },
+                        { new: true }
+                    )
+                    console.log(`USER MINUS: ${userMinus}`);
+                    return userMinus;
+                }
+                throw new AuthenticationError('You need to be logged in!');
+            },
 
     }
-
 };
-
-// const resolvers = {
-//   Query: {
-//     contacts: () => contacts,
-//   },
-//   Mutation: {
-//     addContact: (_, { input }) => {
-//       const newContact = { id: String(contacts.length + 1), ...input };
-//       contacts.push(newContact);
-//       return newContact;
-//     },
-
-//   },
-// };
-// removeFriend: async (parent, args, context) => {
-// const contactIndex = contacts.findIndex((contact) => contact.id === id);
-//       if (contactIndex !== -1) {
-//         contacts.splice(contactIndex, 1);
-//         return true;
-//       }
-//       throw new Error('Contact not found');
-//     },
 
 module.exports = resolvers;

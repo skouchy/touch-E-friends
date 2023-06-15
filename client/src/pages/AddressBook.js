@@ -1,74 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { ADD_CONTACT, UPDATE_CONTACT, DELETE_CONTACT } from '../utils/mutations';
-import { GET_CONTACTS } from '../utils/queries';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { QUERY_ME } from '../utils/queries';
+import Auth from '../utils/auth';
+
 import './AddressBook.css';
 
 
 function AddressBook() {
-  const [contacts, setContacts] = useState([]);
-  const { data, loading, error } = useQuery(GET_CONTACTS);
-  const [addContact] = useMutation(ADD_CONTACT);
-  const [updateContact] = useMutation(UPDATE_CONTACT);
-  const [deleteContact] = useMutation(DELETE_CONTACT);
   const [showPostcard, setShowPostcard] = useState(false);
   const [postcardData, setPostcardData] = useState({});
+  const { data, loading } = useQuery(QUERY_ME);
+  const [updateContact] = useMutation(UPDATE_CONTACT);
+  const [deleteContact] = useMutation(DELETE_CONTACT);
+  const [addContact] = useMutation(ADD_CONTACT);
+  const [newContact, setNewContact] = useState({
+    name: '',
+    address: '',
+    email: '',
+    phone: ''
+  });
 
-  useEffect(() => {
-    if (data) {
-      setContacts(data.contacts);
+
+  const userData = data?.me || {};
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setNewContact({
+      ...newContact,
+      [name]: value
+    });
+  };
+
+  const handleNewContact = async event => {
+    event.preventDefault();
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+    if (!token) {
+      return false;
     }
-  }, [data]);
 
-  const handleUpdate = async (id, field, value) => {
     try {
-      const updatedContact = await updateContact({
+      await addContact({
+        variables: { ...newContact }
+      });
+
+    } catch (error) {
+      console.log('Error adding contact:', error);
+    }
+  };
+
+  const handleUpdate = async ($id, field, value) => {
+    const token = Auth.loggedIn() ? Auth.getAddressBook() : null;
+    if (!token) {
+      return false;
+    }
+    try {
+      await updateContact({
         variables: {
-          id: contacts[id].id,
-          input: { [field]:value }, // Replace with your update logic
-        },
-      });
-      const updatedContacts = contacts.map((contact, index) => {
-        if (index === id) {
-          return updatedContact.data.updateContact;
+          id: userData.contacts[$id].id,
+          input: { [field]: value }, // Replace with your update logic
         }
-        return contact;
       });
-      setContacts(updatedContacts);
     } catch (error) {
       console.log('Error updating contact:', error);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async ($id) => {
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+    if (!token) {
+      return false;
+    }
     try {
       await deleteContact({
-        variables: { id: contacts[id].id },
+        variables: { id: userData.contacts[$id].id },
       });
-      const updatedContacts = contacts.filter((contact, index) => index !== id);
-      setContacts(updatedContacts);
     } catch (error) {
       console.log('Error deleting contact:', error);
     }
   };
 
-  const handleNewContact = async () => {
-    try {
-      const newContact = {
-        name: 'New Contact',
-        address: 'New Address',
-        email: 'newcontact@example.com',
-      };
-      const addedContact = await addContact({
-        variables: { input: newContact },
-      });
-      setContacts([...contacts, addedContact.data.addContact]);
-    } catch (error) {
-      console.log('Error adding contact:', error);
-    }
-  };
 
   const handleContactSelect = (contact) => {
     setShowPostcard(true);
@@ -83,8 +95,8 @@ function AddressBook() {
   function handleSaveContact() {
     // Save the contact information to localStorage or a state management solution
     // For example, using localStorage:
-    localStorage.setItem('savedContact', JSON.stringify(postcardData));
-  
+    localStorage.setItem('newContact', JSON.stringify(postcardData));
+
     // Navigate to the image search page
     window.location.href = '/imagesearch';
   }
@@ -93,21 +105,34 @@ function AddressBook() {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error fetching contacts: {error.message}</div>;
-  }
+
 
   return (
     <>
-      <Navbar />
       <div className='address-ctn'>
-        <h1>Address Book Page</h1>
+        <h1>{userData.username}'s Address Book</h1>
 
         <div className="contact-list">
-          <button className='btnA' onClick={handleNewContact}>New Contact</button>
+          <div className='form-box'>
+            <h3>Expand your network!</h3>
+            <form className='col-12 mx-4' onSubmit={handleNewContact}>
+              <label className="new-contact-form">Name:</label>
+              <input className='form-input' type="name" name="name" value={newContact.name} onChange={handleChange} />
+              <br></br>
+              <label className="new-contact-form">Email:</label>
+              <input className="form-input" type="email" name="email" value={newContact.email} onChange={handleChange} />
+              <br></br>
+              <label className="new-contact-form">Address:</label>
+              <input className="form-input" type="text" name="address" value={newContact.address} onChange={handleChange} />
+              <br></br>
+              <label className="new-contact-form">Phone:</label>
+              <input className="form-input" type="text" name="phone" value={newContact.phone} onChange={handleChange} />
 
+              <button className='btnA' onClick={handleNewContact}>New Contact</button>
+            </form>
+          </div>
           <div className="contact-cards">
-            {contacts.map((contact, index) => (
+            {userData.contacts.map((contact, index) => (
               <div className="contact-card" key={index}>
                 <h2>{contact.name}</h2>
                 <p>{contact.address}</p>
@@ -124,6 +149,8 @@ function AddressBook() {
           </div>
         </div>
 
+
+
         {showPostcard && (
           <div className="postcard-overlay">
             <div className="postcard-container">
@@ -135,9 +162,8 @@ function AddressBook() {
             </div>
           </div>
         )}
-      </div>
+      </div >
 
-      <Footer />
     </>
   );
 }
